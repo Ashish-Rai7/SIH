@@ -1,0 +1,88 @@
+<!-- heritage/detail.html -->
+{% extends "heritage/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <!-- Monastery Name -->
+    <div style="text-align: center;">
+        <h1 class="mb-3">{{ monastery.name }}</h1>
+        <!-- Location and Established Year -->
+        <h5 class="text-muted">{{ monastery.location }} | Established: {{ monastery.established_year }}</h5>
+    </div>
+    <!-- Monastery Image -->
+    {% if monastery.image %}
+    <!-- <div style="max-width:950px; margin:auto; height: 50px; width: auto;"> -->
+    <img src="{{ monastery.image.url }}" class="img-fluid my-4" alt="{{ monastery.name }}" style="margin: auto;">
+    {% else %}
+    <img src="{% static 'default-monastery.jpg' %}" class="img-fluid my-4" alt="No image available">
+    {% endif %}
+</div>
+{% if monastery.vr_image %}
+<a-scene>
+    <a-sky src="{{ monastery.vr_image.url }}"></a-sky>
+</a-scene>
+</div>
+{% endif %}
+
+
+<!--360 image-->
+<link rel="stylesheet" href="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.css">
+<script src="https://unpkg.com/three@0.159.0/build/three.min.js"></script>
+<script src="https://unpkg.com/photo-sphere-viewer@4/dist/photo-sphere-viewer.js"></script>
+
+
+
+<!-- Street View Embed  -->
+{% if monastery.streetview_embed %}
+<h2 style="margin-top:30px;">360° Street View</h2>
+<div style="max-width:900px; margin:left;">
+    {{ monastery.streetview_embed|safe }}
+</div>
+{% endif %}
+
+<!-- Description -->
+<h2 style="margin-top:30px;">Description</h2>
+<p class="lead">{{ monastery.description }}</p>
+
+
+
+
+
+
+<!-- Map Coordinates -->
+<p><strong>Coordinates:</strong> Latitude: {{ monastery.latitude }}, Longitude: {{ monastery.longitude }}</p>
+<div style="max-width:800px; margin:left;margin-top:20px;">
+    <iframe
+        src="https://www.google.com/maps/embed/v1/view?key=AIzaSyBbz-JickJr46T1oVeffG5Bhj8h59AS3Lw&center={{ monastery.latitude }},{{ monastery.longitude }}&zoom=15"
+        width="100%" height="450" style="border:0; border-radius:8px;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+</div>
+
+
+<!-- Related Upcoming Events -->
+{% if monastery.events.all %}
+<h3 class="mt-5">Upcoming Events</h3>
+<div class="row">
+    {% for event in monastery.events.all %}
+    <div class="col-md-6 mb-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">{{ event.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ event.date }}</h6>
+                <p class="card-text">{{ event.description|truncatewords:25 }}</p>
+                {% if event.ticket_price %}
+                <p class="text-success">Ticket Price: ₹{{ event.ticket_price }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- Back Button -->
+<a href="{% url 'home' %}" class="btn btn-secondary mt-4">Back to Monasteries</a>
+</div>
+
+{% endblock %}

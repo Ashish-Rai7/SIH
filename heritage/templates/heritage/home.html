@@ -1,0 +1,25 @@
+<!-- heritage/home.html -->
+<!-- Loop through monasteries and display them in a card layout -->
+<!-- Each card shows image, name, description, and "View Details" button -->
+{% extends "heritage/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4" style="text-align: center;">Sikkim Heritage Monasteries</h1>
+    <div class="row">
+        {% for monastery in monasteries %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100" style="max-width:950px; margin:auto; width: 100%; height: auto; border-radius:8px;">
+                <img src="{{ monastery.image.url }}" class="card-img-top" alt="{{ monastery.name }}"
+                    style="max-height:250px; object-fit:cover; border-radius:8px 8px 0 0;">
+                <div class="card-body d-flex flex-column">
+                    <h3 class="card-title">{{ monastery.name }}</h3>
+                    <p class="card-text">{{ monastery.description|truncatewords:20 }}</p>
+                    <a href="{% url 'monastery_detail' monastery.id %}" class="btn btn-primary mt-auto">More Info</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
